@@ -1,0 +1,10 @@
+fastapi
+pydantic
+uvicorn[standard]
+python-multipart
+crewai
+google-cloud-aiplatform
+chromadb
+serper
+PyMuPDF
+langchain-google-vertexai
