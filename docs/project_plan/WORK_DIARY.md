@@ -44,6 +44,10 @@ This document tracks the progress, decisions, and next steps for the Resume Anal
   - FastAPI backend and Gemini 2.5 LLM are now fully integrated and working together.
   - The system is "always working" and ready for agent scaffolding.
   - Project structure and documentation updated to reflect this milestone.
+- **ATS Agent API Integration Validated:**
+  - Successfully validated the `/v1/ats-agent` endpoint.
+  - ATS & Formatting Agent is now callable and returns structured results.
+  - System remains "always working" and ready for next steps.
 
 ### In Progress (WIP):
 - None.

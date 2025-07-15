@@ -256,3 +256,9 @@ Developed for BYU Computer Science students to bridge the gap between academic l
 - The `/v1/test-gemini` endpoint is live and successfully connects to Gemini 2.5 Flash via Vertex AI.
 - The backend is now always running and ready for incremental agent integration.
 - See the [work diary](docs/project_plan/WORK_DIARY.md) for a detailed log of this milestone.
+
+## ✅ Integration Milestone: ATS Agent API
+
+- The `/v1/ats-agent` endpoint is live and returns valid analysis results.
+- The ATS & Formatting Agent is now integrated and testable via the API.
+- The system remains "always working" and ready for the next agent or orchestration layer.

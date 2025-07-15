@@ -4,6 +4,9 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from vertexai.generative_models import GenerativeModel
 from dotenv import load_dotenv
+from agents.ats_agent import ATSAgent, AgentResponse
+from pydantic import BaseModel
+from fastapi import Body
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -42,3 +45,11 @@ def test_gemini_endpoint():
         return {"success": True, "message": "Successfully connected to Gemini 2.5 Flash.", "response": str(response)}
     except Exception as e:
         return JSONResponse(status_code=500, content={"success": False, "error": str(e)})
+
+class ResumeInput(BaseModel):
+    resume_text: str
+
+@app.post("/v1/ats-agent", response_model=AgentResponse)
+def run_ats_agent(input: ResumeInput = Body(...)):
+    agent = ATSAgent()
+    return agent.analyze(input.resume_text)
