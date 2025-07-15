@@ -48,6 +48,11 @@ This document tracks the progress, decisions, and next steps for the Resume Anal
   - Successfully validated the `/v1/ats-agent` endpoint.
   - ATS & Formatting Agent is now callable and returns structured results.
   - System remains "always working" and ready for next steps.
+- **Agent Prompt Integration:**
+  - All agent scripts now use both the global (`prompt_requirements.md`) and agent-specific prompt requirement files for prompt engineering.
+  - Created missing agent-specific prompt files for each agent in `backend/agents/`.
+  - Verified LLM connectivity and prompt usage for all agents via integration tests. Each agent returns a response from the LLM using the correct prompt files.
+  - Maintained "always working" backend: all endpoints respond and connect to the LLM, even if output parsing is deferred for now.
 
 ### In Progress (WIP):
 - None.
@@ -60,3 +65,6 @@ This document tracks the progress, decisions, and next steps for the Resume Anal
   - Implement end-to-end tests covering the complete flow from file upload to analysis report.
 - **Performance Tuning:**
   - Monitor and optimize the performance of the FastAPI endpoints and Gemini integrations.
+- Refine LLM output parsing for robust JSON extraction (including code blocks and nested structures).
+- Expand integration tests to cover richer agent features and multi-field requests.
+- Update documentation and commit after each milestone.
