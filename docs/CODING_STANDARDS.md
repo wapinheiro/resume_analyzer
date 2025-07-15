@@ -144,3 +144,40 @@ Before merging any code, ensure the following:
 - [ ] Code is formatted using an automated tool (e.g., Black for Python, Prettier for JS).
 - [ ] All new code is self-documenting and easy to understand.
 - [ ] No sensitive information (API keys, secrets) is hardcoded. Use environment variables.
+
+---
+
+## 7. Testing Standards
+
+### 7.1. Testing Philosophy
+
+- **Test-Driven Development (TDD) as a Guideline**: We encourage writing tests before or concurrently with new features to ensure code is verifiable and robust from the start.
+- **Comprehensive Coverage**: All new features must be accompanied by tests.
+
+### 7.2. Testing Frameworks
+
+- **Backend (Python)**:
+    - **`pytest`**: The primary framework for all tests.
+    - **`unittest.mock`**: For mocking dependencies.
+- **Frontend (React)**:
+    - **`Jest`**: For running tests and assertions.
+    - **`React Testing Library`**: For testing components from a user's perspective.
+
+### 7.3. Test Structure
+
+- A `tests/` directory must exist within both the `backend/` and `frontend/` directories.
+- Inside `tests/`, create subdirectories to categorize tests:
+    - `unit/`: For testing individual functions or components in isolation.
+    - `integration/`: For testing the interaction between multiple components.
+    - `e2e/`: (Future goal) For end-to-end tests simulating a full user journey.
+- **Fixtures/Mocks**: Test data, mock objects, or fixtures should be stored in a `tests/fixtures/` or `tests/mocks/` directory.
+
+### 7.4. Naming Conventions
+
+- **Backend**: Test files must be named `test_*.py` (e.g., `test_ats_agent.py`). Test functions must start with `test_`.
+- **Frontend**: Test files should be named `*.test.js` or `*.spec.js` (e.g., `ResumeUploader.test.js`).
+
+### 7.5. Test Coverage
+
+- **Minimum Threshold**: Aim for a minimum of **80% test coverage** for both backend and frontend code.
+- **CI Enforcement**: The CI/CD pipeline should run tests on every commit and pull request, and coverage will be reported.

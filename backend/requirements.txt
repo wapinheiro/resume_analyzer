@@ -1,10 +1,13 @@
-fastapi
-pydantic
-uvicorn[standard]
-python-multipart
-crewai
-google-cloud-aiplatform
-chromadb
-serper
-PyMuPDF
-langchain-google-vertexai
+# Specifies the Python packages required for the backend service.
+# Pinning versions ensures consistent and faster installations.
+
+# For Google Cloud Vertex AI integration
+google-cloud-aiplatform==1.56.0
+google-auth==2.29.0
+
+# For loading environment variables
+python-dotenv==1.0.1
+
+# For building the API
+fastapi==0.111.0
+uvicorn[standard]==0.29.0

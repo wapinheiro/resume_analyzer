@@ -39,6 +39,18 @@ The Resume Analyzer employs a sophisticated **agent-based architecture** that le
                          └──────────────────────────┘
 ```
 
+### 🧠 Core Intelligence Layer: Google Cloud AI
+
+The entire system is powered by **Google's Gemini 1.5 Flash model, accessed via Vertex AI**. This is not just a component; it is the **foundational intelligence layer** of the application.
+
+-   **Why it's Essential**: The LLM provides the core reasoning, pattern recognition, and language understanding capabilities required for a nuanced analysis of a resume. It's what allows the system to go beyond simple keyword matching and understand the context, quality, and impact of the content.
+
+-   **Role in the Architecture**: While the specialized agents provide focus and structure, the LLM is the engine that performs the actual analysis. Each agent acts as a specialized "persona" or "lens," directing the LLM's powerful analytical capabilities to a specific domain (e.g., "analyze this resume from the perspective of an ATS"). The agents provide the context and the criteria, but the LLM provides the intelligence to evaluate against those criteria.
+
+-   **Why Gemini 1.5 Flash**: This model is chosen for its optimal balance of speed, cost, and a large context window, making it ideal for processing detailed resumes and job descriptions efficiently in a real-time web application.
+
+This foundational layer is the first to be built and validated, as every subsequent component depends on it to function.
+
 ## 🎯 Agent-Based Design Philosophy
 
 ### Core Principles

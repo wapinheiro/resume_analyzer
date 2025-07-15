@@ -6,6 +6,43 @@ An intelligent web application designed specifically for BYU Computer Science st
 
 The Resume Analyzer addresses the critical need for CS students to create compelling resumes that can successfully navigate both Applicant Tracking Systems (ATS) and human recruiters. By leveraging specialized AI agents, the system provides detailed analysis across seven key categories with specific, actionable feedback.
 
+## 🏗️ Project Structure
+
+The project should be organized as follows:
+
+```
+byu/                # Organization-level directory
+└── resume_analyzer/ # Project-level directory
+    ├── backend/     # Backend code and virtual environment
+    │   ├── main.py
+    │   ├── requirements.txt
+    │   └── venv/
+    ├── docs/        # Documentation
+    ├── .env         # Environment variables
+    ├── README.md    # Project overview
+    └── ...          # Other project files
+```
+
+- All backend code and dependencies must reside in `resume_analyzer/backend/`.
+- The only virtual environment should be `resume_analyzer/backend/venv/`.
+- No code or venvs should exist at the organization level (`byu/`).
+
+If you find stray folders or files at the organization level, delete them to keep the project clean.
+
+## 🛠️ Core Technology
+
+-   **Backend:** Python
+-   **Cloud Provider:** Google Cloud Platform (GCP)
+-   **AI/ML:** Google Cloud Vertex AI (Gemini Models)
+
+## 🚀 Getting Started
+
+To get started with the backend service, please refer to the detailed instructions in the `backend/README.md` file.
+
+---
+
+*The following sections contain more detailed architectural and technical plans.*
+
 ### Key Features
 
 - **📄 Resume Upload & Processing**: Support for PDF resume uploads with intelligent text extraction
@@ -55,39 +92,77 @@ The Resume Analyzer uses an **agent-based architecture** where specialized AI ag
 
 ## 🚀 Local Development Setup
 
-This project uses a "Cloud-Ready Local" approach. The entire application stack can be run locally using Docker Compose and NPM, while being configured for a seamless deployment to Google Cloud.
+This project uses a "Cloud-Ready Local" approach. The entire application stack can be run locally, configured for a seamless deployment to the cloud.
 
 ### Prerequisites
-- **Docker Desktop**: [Install Docker](https://docs.docker.com/get-docker/)
-- **Node.js v18+**: [Install Node.js](https://nodejs.org/)
 
-### Running the Application
+Before you begin, ensure you have the following tools installed:
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/your-username/resume-analyzer.git
-    cd resume-analyzer
+- **Docker & Docker Compose**: Required to run the containerized backend services.
+  - [Install Docker Desktop](https://docs.docker.com/get-docker/) (includes Docker Compose).
+- **Node.js & npm**: Required for the React frontend. `npm` is included with Node.js.
+  - [Install Node.js v18+ and npm](https://nodejs.org/en/download/).
+- **Git**: For cloning the repository.
+  - [Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+- **Google Cloud CLI**: Required for interacting with Google Cloud services.
+  - [Install Google Cloud CLI](https://cloud.google.com/sdk/docs/install) for your operating system.
+
+### Environment Configuration
+
+The AI agents require API keys to function.
+
+1.  **Create an environment file:**
+    In the `backend` directory, create a file named `.env`.
+    ```sh
+    touch backend/.env
     ```
 
-2.  **Start the Backend (API & Database):**
-    The backend, including the ChromaDB vector store, is managed by Docker Compose.
+2.  **Add your API keys:**
+    Open the `backend/.env` file and add your API keys. For example:
+    ```env
+    # backend/.env
+    GOOGLE_API_KEY="your_google_api_key_here"
+    SERPER_API_KEY="your_serper_api_key_here"
+    ```
+    > **Note**: These keys are passed securely to the Docker container by the `docker-compose.yml` file and are not exposed publicly.
+
+### Local Development
+
+1.  **Install Google Cloud CLI:**
+    Follow the official documentation to [install the Google Cloud CLI](https://cloud.google.com/sdk/docs/install) for your operating system.
+
+2.  **Authenticate with Google Cloud:**
+    After installing the CLI, you need to authenticate your local environment to access Google Cloud services. Run the following command in your terminal and follow the prompts:
+    ```bash
+    gcloud auth application-default login
+    ```
+
+3.  **Set up the backend virtual environment:**
     ```bash
     cd backend
-    docker-compose up --build
+    python -m venv venv
+    source venv/bin/activate
     ```
-    The API will be available at `http://localhost:8000`.
 
-3.  **Start the Frontend:**
-    In a separate terminal, start the React development server.
+4.  **Run the backend server:**
+    ```bash
+    uvicorn main:app --reload
+    ```
+
+5.  **Run the validation script:**
+    In a separate terminal, set up the validation environment and run the script to test the backend.
+    ```bash
+    cd backend
+    source venv/bin/activate
+    python -m scripts.validate_backend
+    ```
+
+6.  **Start the frontend development server:**
+    In another terminal, start the React frontend.
     ```bash
     cd frontend
-    npm install
     npm start
     ```
-    The frontend will be available at `http://localhost:3000`.
-
-4.  **Access the Application:**
-    Open your web browser to `http://localhost:3000` to use the application.
 
 ## ☁️ Deployment
 
@@ -175,3 +250,9 @@ Developed for BYU Computer Science students to bridge the gap between academic l
 ---
 
 **Made with ❤️ for BYU CS Students**
+
+## ✅ Integration Milestone: FastAPI + Gemini 2.5
+
+- The `/v1/test-gemini` endpoint is live and successfully connects to Gemini 2.5 Flash via Vertex AI.
+- The backend is now always running and ready for incremental agent integration.
+- See the [work diary](docs/project_plan/WORK_DIARY.md) for a detailed log of this milestone.
