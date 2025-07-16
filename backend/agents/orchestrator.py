@@ -22,26 +22,25 @@ class ResumeAnalysisCrew:
             'education': EducationAgent(),
         }
 
+
     def run(self, resume_text: str, job_description: str = None):
         def agent_task(name, agent):
-            if name == 'tailoring':
-                # Tailoring agent requires job_description
-                if not job_description:
-                    return name, {
-                        'score': 0.0,
-                        'feedback': ['No job description provided. Tailoring analysis skipped.'],
-                        'suggestions': [],
-                        'confidence': 0.0
-                    }
-                result = agent.analyze(resume_text, job_description)
-            else:
-                result = agent.analyze(resume_text)
-            return name, result.dict() if hasattr(result, 'dict') else result
+            try:
+                if name == 'tailoring':
+                    # Tailoring agent requires job_description
+                    if not job_description:
+                        return name, 'SKIPPED'
+                    agent.analyze(resume_text, job_description)
+                else:
+                    agent.analyze(resume_text)
+                return name, 'OK'
+            except Exception:
+                return name, 'ERROR'
 
         results = {}
         with ThreadPoolExecutor() as executor:
             futures = [executor.submit(agent_task, name, agent) for name, agent in self.agents.items()]
             for future in as_completed(futures):
-                name, result = future.result()
-                results[name] = result
+                name, status = future.result()
+                results[name] = status
         return results
