@@ -1,0 +1,27 @@
+John Doe
+Email: john.doe@email.com
+Phone: (555) 123-4567
+LinkedIn: linkedin.com/in/johndoe
+GitHub: github.com/johndoe
+
+Summary:
+Results-driven software engineer with 3+ years of experience in backend development, cloud infrastructure, and agile teams. Passionate about building scalable solutions and mentoring junior developers.
+
+Experience:
+Software Engineer, TechCorp (2022–Present)
+- Led migration of legacy systems to cloud, reducing costs by 30%.
+- Developed RESTful APIs in Python and FastAPI, serving 100K+ users.
+- Mentored 5 junior engineers, improving team productivity.
+
+Projects:
+Resume Analyzer (Open Source)
+- Designed and implemented a modular resume analysis tool using FastAPI and Vertex AI.
+- Integrated multiple AI agents for ATS, skills, and content analysis.
+
+Skills:
+Python, FastAPI, Docker, GCP, SQL, Git, Agile, Communication, Leadership
+
+Education:
+BS Computer Science, BYU (2022)
+GPA: 3.8/4.0
+Relevant Coursework: Machine Learning, Cloud Computing, Software Engineering

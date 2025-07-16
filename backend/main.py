@@ -5,8 +5,15 @@ from fastapi.responses import JSONResponse
 from vertexai.generative_models import GenerativeModel
 from dotenv import load_dotenv
 from agents.ats_agent import ATSAgent, AgentResponse
+from agents.projects_agent import ProjectsAgent
+from agents.skills_agent import SkillsAgent
+from agents.tailoring_agent import TailoringAgent
+from agents.digital_agent import DigitalAgent
+from agents.content_agent import ContentAgent
+from agents.education_agent import EducationAgent
 from pydantic import BaseModel
 from fastapi import Body
+from agents.orchestrator import ResumeAnalysisCrew
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -53,3 +60,44 @@ class ResumeInput(BaseModel):
 def run_ats_agent(input: ResumeInput = Body(...)):
     agent = ATSAgent()
     return agent.analyze(input.resume_text)
+
+@app.post("/v1/projects-agent", response_model=AgentResponse)
+def run_projects_agent(input: ResumeInput = Body(...)):
+    agent = ProjectsAgent()
+    return agent.analyze(input.resume_text)
+
+@app.post("/v1/skills-agent", response_model=AgentResponse)
+def run_skills_agent(input: ResumeInput = Body(...)):
+    agent = SkillsAgent()
+    return agent.analyze(input.resume_text)
+
+@app.post("/v1/tailoring-agent", response_model=AgentResponse)
+def run_tailoring_agent(input: ResumeInput = Body(...)):
+    agent = TailoringAgent()
+    # For now, job_description is optional and empty
+    return agent.analyze(input.resume_text, job_description="")
+
+@app.post("/v1/digital-agent", response_model=AgentResponse)
+def run_digital_agent(input: ResumeInput = Body(...)):
+    agent = DigitalAgent()
+    return agent.analyze(input.resume_text)
+
+@app.post("/v1/content-agent", response_model=AgentResponse)
+def run_content_agent(input: ResumeInput = Body(...)):
+    agent = ContentAgent()
+    return agent.analyze(input.resume_text)
+
+@app.post("/v1/education-agent", response_model=AgentResponse)
+def run_education_agent(input: ResumeInput = Body(...)):
+    agent = EducationAgent()
+    return agent.analyze(input.resume_text)
+
+class OrchestratorInput(BaseModel):
+    resume_text: str
+    job_description: str = None
+
+@app.post("/v1/analyze")
+def analyze_resume(input: OrchestratorInput = Body(...)):
+    crew = ResumeAnalysisCrew()
+    results = crew.run(input.resume_text, input.job_description)
+    return JSONResponse(content=results)

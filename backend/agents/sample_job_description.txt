@@ -1,0 +1,16 @@
+Software Engineer – Cloud Solutions
+
+TechCorp is seeking a software engineer to design, build, and maintain scalable cloud-based applications. The ideal candidate will have experience with Python, FastAPI, and cloud platforms (GCP preferred). Responsibilities include API development, system migration, and mentoring junior team members. Strong communication and leadership skills required.
+
+Required Skills:
+- Python
+- FastAPI
+- Google Cloud Platform (GCP)
+- API development
+- Team leadership
+- Excellent communication
+
+Preferred:
+- Experience with Docker and CI/CD
+- Knowledge of machine learning concepts
+- Open source contributions
