@@ -1,0 +1,67 @@
+.analyzer-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.analyzer-instructions {
+  color: #555;
+  margin-bottom: 1rem;
+}
+.analyzer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.analyzer-form label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+.analyzer-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  resize: vertical;
+}
+.analyzer-form button {
+  padding: 0.75rem 1.5rem;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.analyzer-form button:disabled {
+  background: #90caf9;
+  cursor: not-allowed;
+}
+.analyzer-error {
+  color: #d32f2f;
+  margin-top: 1rem;
+  font-weight: 500;
+}
+.analyzer-results {
+  margin-top: 2rem;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  padding: 1rem;
+}
+.analyzer-results ul {
+  list-style: none;
+  padding: 0;
+}
+.analyzer-results li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+.analyzer-results li:last-child {
+  border-bottom: none;
+}

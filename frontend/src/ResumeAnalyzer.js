@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './ResumeAnalyzer.css';
 
 function ResumeAnalyzer() {
   const [resumeText, setResumeText] = useState('');
@@ -29,24 +30,21 @@ function ResumeAnalyzer() {
   };
 
   return (
-    <div style={{ maxWidth: 600, margin: '2rem auto', padding: '2rem', border: '1px solid #ddd', borderRadius: 8 }}>
+    <div className="analyzer-container">
       <h2>Resume Analyzer</h2>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1rem' }}>
-          <label>Resume Text:</label><br />
-          <textarea value={resumeText} onChange={e => setResumeText(e.target.value)} rows={6} style={{ width: '100%' }} required />
-        </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label>Job Description (optional):</label><br />
-          <textarea value={jobDescription} onChange={e => setJobDescription(e.target.value)} rows={4} style={{ width: '100%' }} />
-        </div>
-        <button type="submit" disabled={loading} style={{ padding: '0.5rem 1.5rem' }}>
+      <p className="analyzer-instructions">Paste your resume and (optionally) a job description below. Click Analyze to see agent results.</p>
+      <form onSubmit={handleSubmit} className="analyzer-form">
+        <label>Resume Text:</label>
+        <textarea value={resumeText} onChange={e => setResumeText(e.target.value)} rows={6} required />
+        <label>Job Description (optional):</label>
+        <textarea value={jobDescription} onChange={e => setJobDescription(e.target.value)} rows={4} />
+        <button type="submit" disabled={loading}>
           {loading ? 'Analyzing...' : 'Analyze'}
         </button>
       </form>
-      {error && <div style={{ color: 'red', marginTop: '1rem' }}>{error}</div>}
+      {error && <div className="analyzer-error">{error}</div>}
       {results && (
-        <div style={{ marginTop: '2rem' }}>
+        <div className="analyzer-results">
           <h3>Agent Results</h3>
           <ul>
             {Object.entries(results).map(([agent, status]) => (
