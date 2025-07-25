@@ -1,7 +1,9 @@
 import os
 import vertexai
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse
+import pdfplumber
+import docx
 from vertexai.generative_models import GenerativeModel
 from dotenv import load_dotenv
 from agents.ats_agent import ATSAgent, AgentResponse
@@ -102,12 +104,41 @@ def run_education_agent(input: ResumeInput = Body(...)):
     agent = EducationAgent()
     return agent.analyze(input.resume_text)
 
+
+# For JSON-based requests (legacy/paste)
 class OrchestratorInput(BaseModel):
-    resume_text: str
+    resume_text: str = None
     job_description: str = None
 
+
+# Unified endpoint: supports file upload (PDF, DOCX, TXT) or pasted text
 @app.post("/v1/analyze")
-def analyze_resume(input: OrchestratorInput = Body(...)):
+async def analyze_resume(
+    resume_file: UploadFile = File(None),
+    resume_text: str = Form(None),
+    job_description: str = Form(None)
+):
+    # Extract resume text from file or form
+    text = None
+    if resume_file:
+        try:
+            if resume_file.filename.lower().endswith('.pdf'):
+                with pdfplumber.open(resume_file.file) as pdf:
+                    text = "\n".join(page.extract_text() or '' for page in pdf.pages)
+            elif resume_file.filename.lower().endswith('.docx'):
+                doc = docx.Document(resume_file.file)
+                text = "\n".join([para.text for para in doc.paragraphs])
+            elif resume_file.filename.lower().endswith('.txt') or resume_file.content_type.startswith('text/'):
+                text = (await resume_file.read()).decode('utf-8', errors='ignore')
+            else:
+                return JSONResponse(status_code=400, content={"error": "Unsupported file type. Please upload PDF, DOCX, or TXT."})
+        except Exception as e:
+            return JSONResponse(status_code=400, content={"error": f"Failed to extract text: {str(e)}"})
+    elif resume_text:
+        text = resume_text
+    else:
+        return JSONResponse(status_code=400, content={"error": "No resume file or text provided."})
+
     crew = ResumeAnalysisCrew()
-    results = crew.run(input.resume_text, input.job_description)
+    results = crew.run(text, job_description)
     return JSONResponse(content=results)

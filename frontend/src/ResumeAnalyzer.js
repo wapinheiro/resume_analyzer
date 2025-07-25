@@ -1,23 +1,35 @@
+
 import React, { useState } from 'react';
 import './ResumeAnalyzer.css';
 
 function ResumeAnalyzer() {
   const [resumeText, setResumeText] = useState('');
+  const [resumeFile, setResumeFile] = useState(null);
   const [jobDescription, setJobDescription] = useState('');
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     setResults(null);
+
+    // Prepare form data for file upload or text
+    const formData = new FormData();
+    if (resumeFile) {
+      formData.append('resume_file', resumeFile);
+    } else {
+      formData.append('resume_text', resumeText);
+    }
+    formData.append('job_description', jobDescription);
+
     try {
       const response = await fetch('http://localhost:8000/v1/analyze', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ resume_text: resumeText, job_description: jobDescription })
+        body: formData
       });
       if (!response.ok) throw new Error('API error');
       const data = await response.json();
@@ -29,13 +41,28 @@ function ResumeAnalyzer() {
     }
   };
 
+
+  // No longer needed: all file parsing is handled by the backend
+
   return (
     <div className="analyzer-container">
       <h2>Resume Analyzer</h2>
       <p className="analyzer-instructions">Paste your resume and (optionally) a job description below. Click Analyze to see agent results.</p>
       <form onSubmit={handleSubmit} className="analyzer-form">
-        <label>Resume Text:</label>
-        <textarea value={resumeText} onChange={e => setResumeText(e.target.value)} rows={6} required />
+        <label>Resume File (PDF, TXT, DOCX):</label>
+        <input
+          type="file"
+          accept=".pdf,.txt,.doc,.docx"
+          onChange={e => setResumeFile(e.target.files[0])}
+        />
+        <label>Or Paste Resume Text:</label>
+        <textarea
+          value={resumeText}
+          onChange={e => setResumeText(e.target.value)}
+          rows={6}
+          disabled={!!resumeFile}
+          required={!resumeFile}
+        />
         <label>Job Description (optional):</label>
         <textarea value={jobDescription} onChange={e => setJobDescription(e.target.value)} rows={4} />
         <button type="submit" disabled={loading}>
