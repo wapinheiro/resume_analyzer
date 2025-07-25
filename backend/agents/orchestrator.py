@@ -30,10 +30,22 @@ class ResumeAnalysisCrew:
                     # Tailoring agent requires job_description
                     if not job_description:
                         return name, 'SKIPPED'
-                    agent.analyze(resume_text, job_description)
+                    result = agent.analyze(resume_text, job_description)
                 else:
-                    agent.analyze(resume_text)
-                return name, 'OK'
+                    result = agent.analyze(resume_text)
+                # Ensure all agent results are dictionaries for frontend compatibility
+                if hasattr(result, 'dict') and callable(result.dict):
+                    return name, result.dict()
+                if isinstance(result, dict):
+                    return name, result
+                # If result is a pydantic BaseModel, convert to dict
+                try:
+                    import pydantic
+                    if isinstance(result, pydantic.BaseModel):
+                        return name, result.dict()
+                except ImportError:
+                    pass
+                return name, result
             except Exception:
                 return name, 'ERROR'
 

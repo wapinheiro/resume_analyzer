@@ -22,6 +22,16 @@ Overall Score \= (ATS & Formatting Score \* 0.20) \+ (Projects & Experience Scor
 
 ---
 
+**Confidence Score Guidelines (0-1 Scale):**
+
+* **0.00–0.50: Low Confidence** – The LLM is uncertain about its analysis; review feedback carefully and consider additional validation.
+* **0.51–0.80: Moderate Confidence** – The LLM is reasonably sure, but some caution is advised; feedback is likely useful but not definitive.
+* **0.81–1.00: High Confidence** – The LLM is very certain; feedback is likely reliable and actionable.
+
+Confidence is reported as a decimal (e.g., 0.95 = 95% confidence). High confidence means the LLM is very sure about its analysis. If confidence is below 0.5, review the feedback more critically or seek additional input.
+
+---
+
 **Categories and Detailed Scoring Criteria:**
 
 1\. ATS & Formatting (Weight: 20%)  

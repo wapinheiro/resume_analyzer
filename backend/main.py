@@ -14,12 +14,22 @@ from agents.education_agent import EducationAgent
 from pydantic import BaseModel
 from fastapi import Body
 from agents.orchestrator import ResumeAnalysisCrew
+from fastapi.middleware.cors import CORSMiddleware
 
 # Initialize FastAPI app
 app = FastAPI(
     title="Resume Analyzer API",
     description="An API for analyzing resumes using a team of specialized AI agents.",
     version="0.1.0",
+)
+
+# Add CORS middleware to allow frontend requests from localhost:3000
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # For development, allow all. For production, restrict this.
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/")

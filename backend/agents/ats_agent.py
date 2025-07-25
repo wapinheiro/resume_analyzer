@@ -17,6 +17,7 @@ class AgentResponse(BaseModel):
     suggestions: List[str]
     confidence: float
 
+
 class ATSAgent:
     def __init__(self):
         load_dotenv()
@@ -24,6 +25,8 @@ class ATSAgent:
         if not project_id:
             raise ValueError("GOOGLE_CLOUD_PROJECT environment variable not set.")
         self.model = GenerativeModel("gemini-2.5-flash")
+
+    # Removed custom parser; now uses shared parser from utils.py
 
     def analyze(self, resume_text: str) -> AgentResponse:
         # Read shared and agent-specific prompt requirements
@@ -36,25 +39,8 @@ class ATSAgent:
         prompt = f"""
 {shared_reqs}\n\n{agent_reqs}\n\nResume:\n{resume_text}\n"""
         response = self.model.generate_content(prompt)
-        try:
-            response_str = str(response)
-            # Try to extract JSON from a code block first
-            code_block_match = re.search(r"```json(.*?)```", response_str, re.DOTALL)
-            if code_block_match:
-                json_str = code_block_match.group(1).strip()
-                data = json.loads(json_str)
-                return AgentResponse(**data)
-            # Fallback: match first {...} block
-            match = re.search(r"\{.*?\}", response_str, re.DOTALL)
-            if match:
-                data = json.loads(match.group(0))
-                return AgentResponse(**data)
-            else:
-                raise ValueError("No JSON object found in response.")
-        except Exception:
-            return AgentResponse(
-                score=0.0,
-                feedback=[response_str],
-                suggestions=["Could not parse LLM response as JSON."],
-                confidence=0.0
-            )
+        from .utils import parse_gemini_llm_response
+        parsed = parse_gemini_llm_response(response)
+        if hasattr(parsed, 'dict'):
+            return parsed.dict()
+        return parsed

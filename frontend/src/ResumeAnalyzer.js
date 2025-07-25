@@ -48,7 +48,58 @@ function ResumeAnalyzer() {
           <h3>Agent Results</h3>
           <ul>
             {Object.entries(results).map(([agent, status]) => (
-              <li key={agent}><strong>{agent}:</strong> {status}</li>
+              <li key={agent}>
+                <strong>{agent}:</strong>{' '}
+                {status && typeof status === 'object' && (
+                  <ul>
+                    {/* Score with description */}
+                    {typeof status.score !== 'undefined' && (
+                      <li>
+                        <strong>Score:</strong> {status.score}/10 {' '}
+                        <em>({(() => {
+                          const s = status.score;
+                          if (s <= 2) return 'Poor/Missing';
+                          if (s <= 5) return 'Needs Improvement';
+                          if (s <= 7) return 'Good';
+                          if (s <= 9) return 'Excellent';
+                          return 'Outstanding';
+                        })()})</em>
+                      </li>
+                    )}
+                    {/* Confidence with description */}
+                    {typeof status.confidence !== 'undefined' && (
+                      <li>
+                        <strong>Confidence:</strong> {Math.round(status.confidence * 100)}% {' '}
+                        <em>({(() => {
+                          const c = status.confidence;
+                          if (c <= 0.5) return 'Low Confidence';
+                          if (c <= 0.8) return 'Moderate Confidence';
+                          return 'High Confidence';
+                        })()})</em>
+                      </li>
+                    )}
+                    {/* Feedback */}
+                    {status.feedback && (
+                      <li>
+                        <strong>Feedback:</strong>
+                        {Array.isArray(status.feedback)
+                          ? status.feedback.map((f, i) => <div key={i}>{f}</div>)
+                          : <div>{status.feedback}</div>}
+                      </li>
+                    )}
+                    {/* Suggestions */}
+                    {status.suggestions && (
+                      <li>
+                        <strong>Suggestions:</strong>
+                        {Array.isArray(status.suggestions)
+                          ? status.suggestions.map((s, i) => <div key={i}>{s}</div>)
+                          : <div>{status.suggestions}</div>}
+                      </li>
+                    )}
+                  </ul>
+                )}
+                {(!status || typeof status !== 'object') && String(status)}
+              </li>
             ))}
           </ul>
         </div>
