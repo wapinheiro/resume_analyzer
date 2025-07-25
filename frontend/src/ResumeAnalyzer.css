@@ -1,3 +1,12 @@
+.overall-card {
+  background: #e3fcec;
+  border: 2px solid #34d399;
+  box-shadow: 0 2px 12px rgba(52,211,153,0.10);
+}
+.overall-card .agent-title {
+  color: #059669;
+  font-size: 1.25rem;
+}
 .analyzer-container {
   max-width: 600px;
   margin: 2rem auto;
@@ -54,14 +63,47 @@
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   padding: 1rem;
 }
-.analyzer-results ul {
+
+.agent-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+.agent-card {
+  background: #f5f8ff;
+  border: 2px solid #e3eafc;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(30,64,175,0.07);
+  padding: 1.25rem 1rem;
+  min-width: 220px;
+  max-width: 100%;
+  width: 100%;
+  transition: box-shadow 0.2s;
+}
+.agent-card:hover {
+  box-shadow: 0 4px 16px rgba(30,64,175,0.13);
+}
+.agent-header {
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #dbe6fd;
+  padding-bottom: 0.5rem;
+}
+.agent-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1e40af;
+  letter-spacing: 0.5px;
+}
+.agent-details {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
-.analyzer-results li {
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #eee;
+.agent-details li {
+  margin-bottom: 0.5rem;
 }
-.analyzer-results li:last-child {
-  border-bottom: none;
+.agent-status {
+  color: #d32f2f;
+  font-weight: 500;
 }

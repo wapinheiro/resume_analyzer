@@ -55,4 +55,58 @@ class ResumeAnalysisCrew:
             for future in as_completed(futures):
                 name, status = future.result()
                 results[name] = status
+
+        # --- Compute overall score ---
+        weights = {
+            'ats': 0.20,
+            'projects': 0.25,
+            'tailoring': 0.20,
+            'skills': 0.15,
+            'digital': 0.10,
+            'content': 0.05,  # summary/objective
+            'education': 0.05
+        }
+        total_score = 0.0
+        total_weight = 0.0
+        for key, weight in weights.items():
+            agent_result = results.get(key)
+            score = 0.0
+            if isinstance(agent_result, dict) and 'score' in agent_result and isinstance(agent_result['score'], (int, float)):
+                score = agent_result['score']
+            total_score += score * weight
+            total_weight += weight
+        overall_score = round(total_score / total_weight, 2) if total_weight > 0 else 0.0
+
+        # --- Aggregate feedback and suggestions ---
+        all_feedback = []
+        all_suggestions = []
+        for key in weights.keys():
+            agent_result = results.get(key)
+            if isinstance(agent_result, dict):
+                feedback = agent_result.get('feedback')
+                if feedback:
+                    if isinstance(feedback, list):
+                        all_feedback.extend(feedback)
+                    else:
+                        all_feedback.append(str(feedback))
+                suggestions = agent_result.get('suggestions')
+                if suggestions:
+                    if isinstance(suggestions, list):
+                        all_suggestions.extend(suggestions)
+                    else:
+                        all_suggestions.append(str(suggestions))
+
+        # --- Use LLM to synthesize overall feedback ---
+        from .utils import get_gemini_overall_feedback
+        try:
+            overall_feedback = get_gemini_overall_feedback(all_feedback, all_suggestions)
+        except Exception:
+            # Fallback: simple aggregation
+            overall_feedback = '\n'.join(all_feedback + all_suggestions)
+
+        # --- Return results with overall score and feedback ---
+        results['overall'] = {
+            'score': overall_score,
+            'feedback': overall_feedback
+        }
         return results

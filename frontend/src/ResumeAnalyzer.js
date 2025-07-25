@@ -46,62 +46,92 @@ function ResumeAnalyzer() {
       {results && (
         <div className="analyzer-results">
           <h3>Agent Results</h3>
-          <ul>
-            {Object.entries(results).map(([agent, status]) => (
-              <li key={agent}>
-                <strong>{agent}:</strong>{' '}
-                {status && typeof status === 'object' && (
-                  <ul>
-                    {/* Score with description */}
-                    {typeof status.score !== 'undefined' && (
-                      <li>
-                        <strong>Score:</strong> {status.score}/10 {' '}
-                        <em>({(() => {
-                          const s = status.score;
-                          if (s <= 2) return 'Poor/Missing';
-                          if (s <= 5) return 'Needs Improvement';
-                          if (s <= 7) return 'Good';
-                          if (s <= 9) return 'Excellent';
-                          return 'Outstanding';
-                        })()})</em>
-                      </li>
-                    )}
-                    {/* Confidence with description */}
-                    {typeof status.confidence !== 'undefined' && (
-                      <li>
-                        <strong>Confidence:</strong> {Math.round(status.confidence * 100)}% {' '}
-                        <em>({(() => {
-                          const c = status.confidence;
-                          if (c <= 0.5) return 'Low Confidence';
-                          if (c <= 0.8) return 'Moderate Confidence';
-                          return 'High Confidence';
-                        })()})</em>
-                      </li>
-                    )}
-                    {/* Feedback */}
-                    {status.feedback && (
-                      <li>
-                        <strong>Feedback:</strong>
-                        {Array.isArray(status.feedback)
-                          ? status.feedback.map((f, i) => <div key={i}>{f}</div>)
-                          : <div>{status.feedback}</div>}
-                      </li>
-                    )}
-                    {/* Suggestions */}
-                    {status.suggestions && (
-                      <li>
-                        <strong>Suggestions:</strong>
-                        {Array.isArray(status.suggestions)
-                          ? status.suggestions.map((s, i) => <div key={i}>{s}</div>)
-                          : <div>{status.suggestions}</div>}
-                      </li>
-                    )}
-                  </ul>
+          {/* Overall Score/Feedback Card */}
+          {results.overall && (
+            <div className="agent-card overall-card">
+              <div className="agent-header">
+                <span className="agent-title">OVERALL</span>
+              </div>
+              <ul className="agent-details">
+                {typeof results.overall.score !== 'undefined' && (
+                  <li>
+                    <strong>Score:</strong> {results.overall.score}/10 {' '}
+                    <em>({(() => {
+                      const s = results.overall.score;
+                      if (s <= 2) return 'Poor/Missing';
+                      if (s <= 5) return 'Needs Improvement';
+                      if (s <= 7) return 'Good';
+                      if (s <= 9) return 'Excellent';
+                      return 'Outstanding';
+                    })()})</em>
+                  </li>
                 )}
-                {(!status || typeof status !== 'object') && String(status)}
-              </li>
-            ))}
-          </ul>
+                {results.overall.feedback && (
+                  <li>
+                    <strong>Feedback:</strong>
+                    <div>{results.overall.feedback}</div>
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
+          <div className="agent-cards">
+            {Object.entries(results)
+              .filter(([agent]) => agent !== 'overall')
+              .map(([agent, status]) => (
+                <div className={`agent-card agent-card-${agent}`} key={agent}>
+                  <div className="agent-header">
+                    <span className="agent-title">{agent.replace(/_/g, ' ').toUpperCase()}</span>
+                  </div>
+                  {status && typeof status === 'object' ? (
+                    <ul className="agent-details">
+                      {typeof status.score !== 'undefined' && (
+                        <li>
+                          <strong>Score:</strong> {status.score}/10 {' '}
+                          <em>({(() => {
+                            const s = status.score;
+                            if (s <= 2) return 'Poor/Missing';
+                            if (s <= 5) return 'Needs Improvement';
+                            if (s <= 7) return 'Good';
+                            if (s <= 9) return 'Excellent';
+                            return 'Outstanding';
+                          })()})</em>
+                        </li>
+                      )}
+                      {typeof status.confidence !== 'undefined' && (
+                        <li>
+                          <strong>Confidence:</strong> {Math.round(status.confidence * 100)}% {' '}
+                          <em>({(() => {
+                            const c = status.confidence;
+                            if (c <= 0.5) return 'Low Confidence';
+                            if (c <= 0.8) return 'Moderate Confidence';
+                            return 'High Confidence';
+                          })()})</em>
+                        </li>
+                      )}
+                      {status.feedback && (
+                        <li>
+                          <strong>Feedback:</strong>
+                          {Array.isArray(status.feedback)
+                            ? status.feedback.map((f, i) => <div key={i}>{f}</div>)
+                            : <div>{status.feedback}</div>}
+                        </li>
+                      )}
+                      {status.suggestions && (
+                        <li>
+                          <strong>Suggestions:</strong>
+                          {Array.isArray(status.suggestions)
+                            ? status.suggestions.map((s, i) => <div key={i}>{s}</div>)
+                            : <div>{status.suggestions}</div>}
+                        </li>
+                      )}
+                    </ul>
+                  ) : (
+                    <div className="agent-status">{String(status)}</div>
+                  )}
+                </div>
+              ))}
+          </div>
         </div>
       )}
     </div>

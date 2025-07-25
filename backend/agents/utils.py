@@ -1,3 +1,28 @@
+import os
+from vertexai.generative_models import GenerativeModel
+
+def get_gemini_overall_feedback(feedback_list, suggestions_list):
+    """
+    Synthesizes overall resume feedback using Gemini LLM.
+    Loads the prompt from 'overall_feedback_prompt.md' in the agents directory.
+    """
+    prompt_path = os.path.join(os.path.dirname(__file__), "overall_feedback_prompt.md")
+    with open(prompt_path) as f:
+        base_prompt = f.read()
+    feedback_str = "\n- ".join([str(f) for f in feedback_list]) if feedback_list else "None"
+    suggestions_str = "\n- ".join([str(s) for s in suggestions_list]) if suggestions_list else "None"
+    full_prompt = f"{base_prompt}\n\nIndividual Agent Feedback:\n- {feedback_str}\n\nSuggestions:\n- {suggestions_str}\n\nPlease synthesize a concise, actionable overall feedback summary for the user."
+    model = GenerativeModel("gemini-2.5-flash")
+    response = model.generate_content(full_prompt)
+    # Extract plain text from Gemini response
+    candidates = getattr(response, 'candidates', None)
+    if candidates and len(candidates) > 0:
+        content = getattr(candidates[0], 'content', None)
+        if content and hasattr(content, 'parts') and len(content.parts) > 0:
+            text = getattr(content.parts[0], 'text', None)
+            if text:
+                return text.strip()
+    return str(response)
 import json
 import re
 from .ats_agent import AgentResponse
