@@ -121,3 +121,36 @@ This document tracks the progress, decisions, and next steps for the Resume Anal
 - Commit and sync all changes to GitHub.
 
 ---
+
+## Session: 2025-07-25
+
+### Done:
+- **Backend File Upload & Extraction:**
+  - Implemented robust backend support for PDF, DOCX, and TXT file uploads at `/v1/analyze`.
+  - Integrated `pdfplumber` and `python-docx` for reliable server-side text extraction.
+  - Unified endpoint now handles both file uploads and pasted text, with clear error handling for unsupported/failed extractions.
+  - Updated backend requirements and ensured all dependencies are installed in the venv.
+- **Frontend Cleanup:**
+  - Removed all PDF.js and client-side file parsing logic from the React frontend.
+  - Frontend now sends files as `FormData` to the backend for parsing and analysis.
+  - Confirmed end-to-end flow: user can upload PDF, DOCX, or TXT resumes and receive agent results.
+- **Documentation:**
+  - Updated `requirements.txt` and documented new backend workflow for file uploads and extraction.
+
+### In Progress (WIP):
+- None (all major backend/frontend integration tasks for file upload are complete).
+
+### Immediate Next Steps:
+- **Frontend UI Improvements:**
+  - Order agent cards by their scoring weight (weightier cards first).
+  - Add a simple chart illustration (e.g., bar or radar chart) for individual agent scores.
+  - Set the overall score/feedback card to a distinct color for emphasis.
+- **User Experience:**
+  - Continue to polish the frontend for clarity and accessibility.
+  - Add more detailed error messages and loading indicators.
+- **Testing:**
+  - Expand end-to-end and integration tests to cover file upload edge cases and error handling.
+- **Documentation:**
+  - Update user and developer documentation to reflect the new file upload and analysis workflow.
+
+---
