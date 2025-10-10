@@ -24,30 +24,60 @@ class ResumeAnalysisCrew:
 
 
     def run(self, resume_text: str, job_description: str = None):
+        from .validate_feedback import validate_agent_feedback
+        MAX_RETRIES = 2
+
         def agent_task(name, agent):
-            try:
-                if name == 'tailoring':
-                    # Tailoring agent requires job_description
-                    if not job_description:
-                        return name, 'SKIPPED'
-                    result = agent.analyze(resume_text, job_description)
-                else:
-                    result = agent.analyze(resume_text)
-                # Ensure all agent results are dictionaries for frontend compatibility
-                if hasattr(result, 'dict') and callable(result.dict):
-                    return name, result.dict()
-                if isinstance(result, dict):
-                    return name, result
-                # If result is a pydantic BaseModel, convert to dict
+            tries = 0
+            last_result = None
+            while tries <= MAX_RETRIES:
                 try:
-                    import pydantic
-                    if isinstance(result, pydantic.BaseModel):
-                        return name, result.dict()
-                except ImportError:
-                    pass
-                return name, result
-            except Exception:
-                return name, 'ERROR'
+                    if name == 'tailoring':
+                        if not job_description:
+                            return name, 'SKIPPED'
+                        result = agent.analyze(resume_text, job_description)
+                    else:
+                        result = agent.analyze(resume_text)
+                    # Ensure all agent results are dictionaries for frontend compatibility
+                    if hasattr(result, 'dict') and callable(result.dict):
+                        result_dict = result.dict()
+                    elif isinstance(result, dict):
+                        result_dict = result
+                    else:
+                        try:
+                            import pydantic
+                            if isinstance(result, pydantic.BaseModel):
+                                result_dict = result.dict()
+                            else:
+                                result_dict = result
+                        except ImportError:
+                            result_dict = result
+                    last_result = result_dict
+                    feedback = result_dict.get('feedback', '')
+                    # Validate feedback using LLM
+                    is_valid = validate_agent_feedback(feedback, name)
+                    if is_valid:
+                        return name, result_dict
+                    else:
+                        tries += 1
+                        if tries <= MAX_RETRIES:
+                            # Enrich prompt for retry
+                            enriched_resume = resume_text + "\n\nPlease provide a detailed, relevant, and actionable assessment for the resume. Avoid generic, off-topic, or hallucinated responses. Focus on resume strengths, weaknesses, and improvement suggestions."
+                            if name == 'tailoring':
+                                result = agent.analyze(enriched_resume, job_description)
+                            else:
+                                result = agent.analyze(enriched_resume)
+                        else:
+                            break
+                except Exception:
+                    return name, 'ERROR'
+            # If retries exhausted, return a friendly message
+            return name, {
+                'score': 0.0,
+                'feedback': [f"Sorry, the {name} agent could not provide a valid assessment after several attempts. Please try again later or check your input."],
+                'suggestions': [],
+                'confidence': 0.0
+            }
 
         results = {}
         with ThreadPoolExecutor() as executor:
