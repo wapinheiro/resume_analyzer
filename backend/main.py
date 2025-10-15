@@ -25,12 +25,17 @@ app = FastAPI(
     version="0.1.0",
 )
 
-# Add CORS middleware to allow frontend requests from localhost:3000
+# Add CORS middleware to allow frontend requests
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For development, allow all. For production, restrict this.
+    allow_origins=[
+        "http://localhost:3000",  # Local development
+        "https://*.vercel.app",   # Vercel deployments
+        "https://*.netlify.app",  # Netlify deployments
+        "https://resume-analyzer-1-2.vercel.app",  # Specific Vercel URL
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -41,6 +46,14 @@ def root():
     Returns a welcome message.
     """
     return {"status": "ok", "message": "Resume Analyzer API is running."}
+
+@app.get("/health")
+def health_check():
+    """
+    Health check endpoint for Docker and load balancers.
+    Returns a simple health status.
+    """
+    return {"status": "healthy", "message": "API is running"}
 
 @app.get("/v1/test-gemini")
 def test_gemini_endpoint():
