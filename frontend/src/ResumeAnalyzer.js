@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import './ResumeAnalyzer.css';
+import config from './config';
 
 function ResumeAnalyzer() {
   const [resumeText, setResumeText] = useState('');
@@ -27,7 +28,7 @@ function ResumeAnalyzer() {
     formData.append('job_description', jobDescription);
 
     try {
-      const response = await fetch('http://localhost:8000/v1/analyze', {
+      const response = await fetch(`${config.apiUrl}/v1/analyze`, {
         method: 'POST',
         body: formData
       });
